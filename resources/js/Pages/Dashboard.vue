@@ -85,11 +85,20 @@ export default {
     };
   },
   mounted() {
-    axios.get("/user").then((res) => {
+    axios.get("/user/template").then((res) => {
       console.log(res);
     });
   },
   methods: {
+    saveUserTeplate(data) {
+      const backendDatadata = {
+        text: data,
+      };
+      axios.post("/user/template", backendDatadata).then((res) => {
+        console.log(res);
+        alert("Saved");
+      });
+    },
     editorLoaded() {
       // Pass your template JSON here
       const lastData = JSON.parse(localStorage.getItem("lastSavedData"));
@@ -98,8 +107,9 @@ export default {
     saveDesign() {
       this.$refs.emailEditor.editor.saveDesign((design) => {
         console.log("saveDesign", design);
-        localStorage.setItem("lastSavedData", JSON.stringify(design));
-        alert("Saved");
+        const textData = JSON.stringify(design);
+        localStorage.setItem("lastSavedData", textData);
+        this.saveUserTeplate(textData);
       });
     },
     exportHtml() {

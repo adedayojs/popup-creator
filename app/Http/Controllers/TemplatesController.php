@@ -13,11 +13,11 @@ class TemplatesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         // dd('het');
-        return Templates::all();
+        return Templates::all()->where('userId', $request->user()->id);
     }
 
     /**
@@ -31,7 +31,7 @@ class TemplatesController extends Controller
         //
         return Templates::create([
             "userId" => $request->user()->id,
-            "text" => $request->input('text')
+            "templateText" => $request->input('text')
         ]);
     }
 

@@ -15,7 +15,7 @@ class Template extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
-            $table->string('templateText');
+            $table->longText('templateText');
             $table->unsignedBigInteger('userId')->nullable();
 
             $table->foreign('userId')->references('id')->on('users');

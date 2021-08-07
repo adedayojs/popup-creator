@@ -15,7 +15,7 @@ class Templates extends Model
      * @var array
      */
     protected $fillable = [
-        'text',
+        'templateText',
         'userId',
     ];
 
