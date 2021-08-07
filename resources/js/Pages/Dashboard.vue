@@ -6,6 +6,25 @@
       </h2>
     </template>
 
+    <div class="grid grid-cols-3 gap-4 p-8">
+      <button
+        @click="loadDesign(design)"
+        v-for="design in savedDesign"
+        class="
+          bg-yellow-500
+          hover:bg-blue-700
+          text-white
+          font-bold
+          py-2
+          px-4
+          rounded
+        "
+        :key="design.id"
+      >
+        Design {{ design.id }}
+      </button>
+      <!-- ... -->
+    </div>
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -82,27 +101,44 @@ export default {
   data() {
     return {
       html: "",
+      savedDesign: [],
     };
   },
   mounted() {
-    axios.get("/user/template").then((res) => {
-      console.log(res);
-    });
+    this.fetchSavedDesigns();
   },
   methods: {
+    fetchSavedDesigns() {
+      axios.get("/user/template").then((res) => {
+        console.log(res);
+        this.savedDesign = res.data;
+      });
+    },
     saveUserTeplate(data) {
       const backendDatadata = {
         text: data,
       };
       axios.post("/user/template", backendDatadata).then((res) => {
         console.log(res);
+        this.fetchSavedDesigns();
         alert("Saved");
       });
     },
     editorLoaded() {
       // Pass your template JSON here
-      const lastData = JSON.parse(localStorage.getItem("lastSavedData"));
-      this.$refs.emailEditor.editor.loadDesign(lastData);
+      //   if (this.savedDesign.length > 0) {
+      //     this.loadDesign(this.savedDesign[this.savedDesign.length - 1]);
+      //   }
+      axios.get("/user/template/default").then((res) => {
+        console.log(res);
+        const defaultData = JSON.parse(res.data.templateText);
+        this.$refs.emailEditor.editor.loadDesign(defaultData);
+      });
+    },
+
+    loadDesign(item) {
+      const selected = JSON.parse(item.templateText);
+      this.$refs.emailEditor.editor.loadDesign(selected);
     },
     saveDesign() {
       this.$refs.emailEditor.editor.saveDesign((design) => {

@@ -36,4 +36,5 @@ Route::middleware('auth:sanctum')->group(function () {
     })->name('notifications');
     Route::get('user/template', [TemplatesController::class, 'index']);
     Route::post('user/template', [TemplatesController::class, 'store']);
+    Route::get('user/template/default', [TemplatesController::class, 'default']);
 });
