@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\TemplatesController;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,3 +29,11 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user', function (Request $request) {
+        return $request->user();
+    })->name('notifications');
+    Route::get('user/template', [TemplatesController::class, 'index']);
+    Route::post('user/template', [TemplatesController::class, 'store']);
+});

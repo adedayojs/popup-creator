@@ -44,7 +44,7 @@
                 Export HTML
               </button>
             </div>
-            <modal name="my-first-modal">
+            <modal name="htlm-results-modal">
               <div class="p-5">
                 Copy The text Below and paste it on your site <br />
                 <div class="overflow">
@@ -84,20 +84,27 @@ export default {
       html: "",
     };
   },
-
+  mounted() {
+    axios.get("/user").then((res) => {
+      console.log(res);
+    });
+  },
   methods: {
     editorLoaded() {
       // Pass your template JSON here
-      // this.$refs.emailEditor.editor.loadDesign({});
+      const lastData = JSON.parse(localStorage.getItem("lastSavedData"));
+      this.$refs.emailEditor.editor.loadDesign(lastData);
     },
     saveDesign() {
       this.$refs.emailEditor.editor.saveDesign((design) => {
         console.log("saveDesign", design);
+        localStorage.setItem("lastSavedData", JSON.stringify(design));
+        alert("Saved");
       });
     },
     exportHtml() {
       this.$refs.emailEditor.editor.exportHtml((data) => {
-        this.$modal.show("my-first-modal");
+        this.$modal.show("htlm-results-modal");
         console.log("exportHtml", data);
 
         this.html = `
