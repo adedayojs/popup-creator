@@ -44,7 +44,21 @@
                 Export HTML
               </button>
             </div>
-
+            <modal name="my-first-modal">
+              <div class="p-5">
+                Copy The text Below and paste it on your site <br />
+                <div class="overflow">
+                  <!-- <p id="htmlText" @click="copyText">{{ html }}</p> -->
+                  <!-- <input id="htmlText" type="textarea" @click="copyText" :value="html" /> -->
+                  <textarea
+                    id="htmlText"
+                    type="textarea"
+                    @click="copyText"
+                    :value="html"
+                  ></textarea>
+                </div>
+              </div>
+            </modal>
             <EmailEditor ref="emailEditor" v-on:load="editorLoaded" />
           </div>
         </div>
@@ -65,6 +79,12 @@ export default {
     EmailEditor,
   },
 
+  data() {
+    return {
+      html: "",
+    };
+  },
+
   methods: {
     editorLoaded() {
       // Pass your template JSON here
@@ -77,8 +97,38 @@ export default {
     },
     exportHtml() {
       this.$refs.emailEditor.editor.exportHtml((data) => {
+        this.$modal.show("my-first-modal");
         console.log("exportHtml", data);
+
+        this.html = `
+            <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+            <script src="//code.jquery.com/jquery-1.11.1.min.js"><\/script>
+            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"><\/script>
+            
+            <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: visible;">
+                <div class="modal-dialog">
+                    ${data.html}
+                </div>
+            </div>
+            <script>
+                $('#login-modal').modal()
+            <\/script>`;
       });
+    },
+
+    copyText() {
+      /* Get the text field */
+      var copyText = document.getElementById("htmlText");
+
+      /* Select the text field */
+      copyText.select();
+      //   copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+      /* Copy the text inside the text field */
+      document.execCommand("copy");
+
+      /* Alert the copied text */
+      alert("Text Copied");
     },
   },
 };
@@ -88,5 +138,14 @@ export default {
 #email-editor-container,
 #editor-1 {
   height: 80vh;
+}
+.overflow {
+  overflow: scroll;
+  height: 40vh;
+  padding: 2em;
+}
+textarea {
+  width: 100%;
+  height: 61%;
 }
 </style>
